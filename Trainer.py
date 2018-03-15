@@ -3,6 +3,7 @@ import tensorflow.contrib.slim as slim
 import tensorflow as tf
 from math import ceil
 import time
+import os
 
 start_time = time.time()
 
@@ -93,7 +94,7 @@ with tf.Session() as sess:
         print('Epoch ' + str(epoch) + ', validation accuracy ' + str(
             round(1.0 * accuracy_agg / val_steps, 4)) + ' Time: ' +
               str(round(time.time() - start_epoch, 4)))
-    # saver.save(sess, os.path.join(model_path, "testnet"), global_step=epoch)
+    saver.save(sess, os.path.join(model_path, "testnet"), global_step=epoch)
 
     accuracy_agg = 0.0
     for i in range(test_steps):
