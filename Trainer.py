@@ -1,18 +1,20 @@
 from DataLoader import DataLoader
 import tensorflow.contrib.slim as slim
 import tensorflow as tf
-import os
 from math import ceil
-import sys
+import time
+
+start_time = time.time()
+
 
 def create_net(input, keep_prob, nr_classes, name):
     with slim.arg_scope([slim.conv2d, slim.fully_connected], activation_fn=tf.nn.relu):
-        net = slim.conv2d(input, 16, [5, 5], padding='SAME', scope=name + "/convolutional_part/conv1")
+        net = slim.conv2d(input, 16, [3, 3], padding='SAME', scope=name + "/convolutional_part/conv1")
         net = slim.max_pool2d(net, [2, 2], [2, 2], scope=name + "/convolutional_part/pool1")
-        net = slim.conv2d(net, 32, [5, 5], padding='SAME', scope=name + "/convolutional_part/conv2")
-        net = slim.max_pool2d(net, [2, 2], [2, 2], scope=name + "/convolutional_part/pool2")
-        net = slim.conv2d(net, 32, [5, 5], padding='SAME', scope=name + "/convolutional_part/conv3")
-        net = slim.max_pool2d(net, [2, 2], [2, 2], scope=name + "/convolutional_part/pool3")
+        net = slim.conv2d(net, 32, [4, 4], padding='SAME', scope=name + "/convolutional_part/conv2")
+        net = slim.max_pool2d(net, [4, 4], [2, 2], scope=name + "/convolutional_part/pool2")
+        net = slim.conv2d(net, 64, [5, 5], padding='SAME', scope=name + "/convolutional_part/conv3")
+        net = slim.max_pool2d(net, [3, 3], [2, 2], scope=name + "/convolutional_part/pool3")
 
         net = slim.flatten(net, scope=name + "/flatten")
         net = slim.fully_connected(net, 1024, scope=name + "/fc_1")
@@ -22,18 +24,18 @@ def create_net(input, keep_prob, nr_classes, name):
         return slim.fully_connected(net, nr_classes, scope=name + "/fc_out")
 
 
-batch_size = 32
-max_epochs = 10
+batch_size = 64
+max_epochs = 20
 nr_classes = 4
 data_set_size = 64
 model_path = 'checkpoints'
 log_path = 'logs'
 
-dataLoader = DataLoader("data/", 4, batch_size, 0.8, 0.15)
+dataLoader = DataLoader("data/", 4, batch_size, [0.8, 0.15])
 
-steps_per_epoch = ceil(dataLoader.trainLength() / batch_size)
-val_steps = ceil(dataLoader.valLength() / batch_size)
-test_steps = ceil(dataLoader.testLength() / batch_size)
+steps_per_epoch = ceil(dataLoader.length(DataLoader.TRAIN) / batch_size)
+val_steps = ceil(dataLoader.length(DataLoader.VAL) / batch_size)
+test_steps = ceil(dataLoader.length(DataLoader.TEST) / batch_size)
 
 # Declare input variables
 x = tf.placeholder(tf.float32, [None, data_set_size, 4])
@@ -69,9 +71,13 @@ with tf.Session() as sess:
 
     writer = tf.summary.FileWriter(log_path, sess.graph)
     iteration_cnt = 0
+
+    print("Start time: " + str(time.time() - start_time))
+
     for epoch in range(max_epochs):
+        start_epoch = time.time()
         for i in range(steps_per_epoch):
-            batch_x, batch_y = dataLoader.nextTrain_batch()
+            batch_x, batch_y = dataLoader.next_batch(DataLoader.TRAIN)
             _, train_loss = sess.run([train_step, cross_entropy], feed_dict={x: batch_x, y_: batch_y, keep_prob: 0.5})
             print("Step " + str(i) + "/" + str(steps_per_epoch) + ": " + str(train_loss), end='\r')
             if i % 50 == 0:
@@ -82,14 +88,16 @@ with tf.Session() as sess:
 
         accuracy_agg = 0
         for i in range(val_steps):
-            batch_x, batch_y = dataLoader.nextVal_batch()
+            batch_x, batch_y = dataLoader.next_batch(DataLoader.VAL)
             accuracy_agg += accuracy.eval(feed_dict={x: batch_x, y_: batch_y, keep_prob: 1.0})
-        saver.save(sess, os.path.join(model_path, "testnet"), global_step=epoch)
-        print('Epoch %d, validation accuracy %g' % (epoch, 1.0 * accuracy_agg / val_steps))
+        print('Epoch ' + str(epoch) + ', validation accuracy ' + str(
+            round(1.0 * accuracy_agg / val_steps, 4)) + ' Time: ' +
+              str(round(time.time() - start_epoch, 4)))
+    # saver.save(sess, os.path.join(model_path, "testnet"), global_step=epoch)
 
     accuracy_agg = 0.0
     for i in range(test_steps):
-        batch_x, batch_y = dataLoader.nextTest_batch()
+        batch_x, batch_y = dataLoader.next_batch(DataLoader.TEST)
         accuracy_agg += accuracy.eval(feed_dict={x: batch_x, y_: batch_y, keep_prob: 1.0})
     print('Final test accuracy %g' % (1.0 * accuracy_agg / test_steps))
     merged = tf.summary.merge_all()
