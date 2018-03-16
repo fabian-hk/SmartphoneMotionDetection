@@ -52,6 +52,9 @@ with tf.Session() as sess:
     else:
         print("Could not find old network weights")
 
+    # save graph def
+    tf.train.write_graph(sess.graph.as_graph_def(), Net.graph_def_path, 'model.pbtxt', as_text=True)
+
     writer = tf.summary.FileWriter(log_path, sess.graph)
     iteration_cnt = 0
 
@@ -76,7 +79,7 @@ with tf.Session() as sess:
         print('Epoch ' + str(epoch) + ', validation accuracy ' + str(
             round(1.0 * accuracy_agg / val_steps, 4)) + ' Time: ' +
               str(round(time.time() - start_epoch, 4)))
-    #saver.save(sess, os.path.join(model_path, "testnet"), global_step=epoch)
+    # saver.save(sess, os.path.join(model_path, "testnet"), global_step=epoch)
 
     accuracy_agg = 0.0
     for i in range(test_steps):

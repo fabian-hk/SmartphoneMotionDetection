@@ -1,6 +1,7 @@
 import tensorflow.contrib.slim as slim
 import tensorflow as tf
 
+graph_def_path = "graph_def"
 nr_classes = 4
 data_set_size = 64
 model_path = 'checkpoints'
