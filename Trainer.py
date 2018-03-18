@@ -7,8 +7,8 @@ import os
 
 start_time = time.time()
 
-batch_size = 64
-max_epochs = 20
+batch_size = 32
+max_epochs = 21
 nr_classes = 4
 data_set_size = 64
 model_path = 'checkpoints'
@@ -21,10 +21,10 @@ val_steps = ceil(dataLoader.length(DataLoader.VAL) / batch_size)
 test_steps = ceil(dataLoader.length(DataLoader.TEST) / batch_size)
 
 # Declare input variables
-x = tf.placeholder(tf.float32, [None, data_set_size, 4])
+x = tf.placeholder(tf.float32, [None, data_set_size, 4], name="x")
 x_img = tf.reshape(x, [-1, 16, 16, 1])
 y_ = tf.placeholder(tf.int32, [None])
-keep_prob = tf.placeholder(tf.float32)
+keep_prob = tf.placeholder(tf.float32, name="keep_prob")
 
 y = Net.create_net(x_img, keep_prob, nr_classes, "testnet")
 
@@ -79,7 +79,7 @@ with tf.Session() as sess:
         print('Epoch ' + str(epoch) + ', validation accuracy ' + str(
             round(1.0 * accuracy_agg / val_steps, 4)) + ' Time: ' +
               str(round(time.time() - start_epoch, 4)))
-    # saver.save(sess, os.path.join(model_path, "testnet"), global_step=epoch)
+    saver.save(sess, os.path.join(model_path, "testnet"), global_step=epoch)
 
     accuracy_agg = 0.0
     for i in range(test_steps):
