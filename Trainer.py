@@ -28,6 +28,9 @@ keep_prob = tf.placeholder(tf.float32, name="keep_prob")
 
 y = Net.create_net(x_img, keep_prob, nr_classes, "testnet")
 
+# softmax for output
+softmax = tf.nn.softmax(y, name="softmax")
+
 # Declare losses
 cross_entropy = tf.losses.sparse_softmax_cross_entropy(y_, y)
 tf.summary.scalar('cross_entropy', cross_entropy)

@@ -1,3 +1,0 @@
-python C:\Users\Fabian\Anaconda3\Lib\site-packages\tensorflow\python\tools\f
-reeze_graph.py --input_graph=graph_def\model.pbtxt --input_checkpoint=checkpoints\testnet-19
---input_binary=false --output_graph=graph_def/frozen_graph.pb --output_node=testnet/fc_out/Relu
