@@ -13,6 +13,7 @@ nr_classes = 4
 data_set_size = 64
 model_path = 'checkpoints'
 log_path = 'logs'
+save = False
 
 dataLoader = DataLoader("data/", 4, batch_size, [0.8, 0.15])
 
@@ -55,10 +56,11 @@ with tf.Session() as sess:
     else:
         print("Could not find old network weights")
 
-    # save graph def
-    tf.train.write_graph(sess.graph.as_graph_def(), Net.graph_def_path, 'model.pbtxt', as_text=True)
+    if save:
+        # save graph def
+        tf.train.write_graph(sess.graph.as_graph_def(), Net.graph_def_path, 'model.pbtxt', as_text=True)
 
-    writer = tf.summary.FileWriter(log_path, sess.graph)
+        writer = tf.summary.FileWriter(log_path, sess.graph)
     iteration_cnt = 0
 
     print("Start time: " + str(time.time() - start_time))
@@ -72,7 +74,8 @@ with tf.Session() as sess:
             if i % 50 == 0:
                 merged = tf.summary.merge_all()
                 summary = sess.run(merged, feed_dict={x: batch_x, y_: batch_y, keep_prob: 0.5})
-                writer.add_summary(summary, iteration_cnt * batch_size)
+                if save:
+                    writer.add_summary(summary, iteration_cnt * batch_size)
             iteration_cnt += 1
 
         accuracy_agg = 0
@@ -82,7 +85,8 @@ with tf.Session() as sess:
         print('Epoch ' + str(epoch) + ', validation accuracy ' + str(
             round(1.0 * accuracy_agg / val_steps, 4)) + ' Time: ' +
               str(round(time.time() - start_epoch, 4)))
-    saver.save(sess, os.path.join(model_path, "testnet"), global_step=epoch)
+    if save:
+        saver.save(sess, os.path.join(model_path, "testnet"), global_step=epoch)
 
     accuracy_agg = 0.0
     for i in range(test_steps):
@@ -91,4 +95,5 @@ with tf.Session() as sess:
     print('Final test accuracy %g' % (1.0 * accuracy_agg / test_steps))
     merged = tf.summary.merge_all()
     summary = sess.run(merged, feed_dict={x: batch_x, y_: batch_y, keep_prob: 1.0})
-    writer.add_summary(summary, iteration_cnt * batch_size)
+    if save:
+        writer.add_summary(summary, iteration_cnt * batch_size)
