@@ -13,7 +13,7 @@ nr_classes = 4
 data_set_size = 64
 model_path = 'checkpoints'
 log_path = 'logs'
-save = True
+save = False
 
 dataLoader = DataLoader("data/", 4, batch_size, [0.8, 0.15])
 
