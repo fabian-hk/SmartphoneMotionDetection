@@ -10,7 +10,7 @@ start_time = time.time()
 batch_size = 32
 max_epochs = 21
 nr_classes = 4
-data_set_size = 64
+data_set_size = 256
 model_path = 'checkpoints'
 log_path = 'logs'
 save = False
@@ -23,7 +23,7 @@ test_steps = ceil(dataLoader.length(DataLoader.TEST) / batch_size)
 
 # Declare input variables
 x = tf.placeholder(tf.float32, [None, data_set_size, 4], name="x")
-x_img = tf.reshape(x, [-1, 16, 16, 1])
+x_img = tf.reshape(x, [-1, 32, 32, 1])
 y_ = tf.placeholder(tf.int32, [None])
 keep_prob = tf.placeholder(tf.float32, name="keep_prob")
 
