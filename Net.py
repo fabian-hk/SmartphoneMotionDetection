@@ -9,7 +9,7 @@ model_path = 'checkpoints'
 
 def create_net(input, keep_prob, nr_classes, name):
     with slim.arg_scope([slim.conv2d, slim.fully_connected], activation_fn=tf.nn.relu):
-        net = slim.conv2d(input, 16, [3, 3], padding='SAME', scope=name + "/convolutional_part/conv1")
+        net = slim.conv2d(input, 32, [3, 3], padding='SAME', scope=name + "/convolutional_part/conv1")
         net = slim.max_pool2d(net, [2, 2], [2, 2], scope=name + "/convolutional_part/pool1")
         net = slim.conv2d(net, 32, [4, 4], padding='SAME', scope=name + "/convolutional_part/conv2")
         net = slim.max_pool2d(net, [4, 4], [2, 2], scope=name + "/convolutional_part/pool2")
