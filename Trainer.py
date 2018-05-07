@@ -59,8 +59,8 @@ with tf.Session() as sess:
     if save:
         # save graph def
         tf.train.write_graph(sess.graph.as_graph_def(), Net.graph_def_path, 'model.pbtxt', as_text=True)
-
         writer = tf.summary.FileWriter(log_path, sess.graph)
+
     iteration_cnt = 0
 
     print("Start time: " + str(time.time() - start_time))
