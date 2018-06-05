@@ -8,15 +8,15 @@ import os
 
 start_time = time.time()
 
-batch_size = 64
-max_epochs = 16
+batch_size = 32
+max_epochs = 11
 nr_classes = 4
 data_set_size = 256
 model_path = 'checkpoints'
 log_path = 'logs'
 save = False
 
-dataLoader = DataLoader("data/", 4, batch_size, [0.8, 0.15])
+dataLoader = DataLoader("data/SensorCollector_Time_Gravity/", 4, batch_size, [0.8, 0.15])
 
 steps_per_epoch = ceil(dataLoader.length(DataLoader.TRAIN) / batch_size)
 val_steps = ceil(dataLoader.length(DataLoader.VAL) / batch_size)
