@@ -4,6 +4,8 @@ import os
 from math import ceil
 import random
 
+# Note:
+# check file 2_class_time_gravity_000002.txt
 
 class DataLoader:
     # constants

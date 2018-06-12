@@ -6,6 +6,8 @@ from math import ceil
 import time
 import os
 
+# os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
 start_time = time.time()
 
 batch_size = 32
