@@ -7,18 +7,17 @@ import time
 import os
 
 # os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
-
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 start_time = time.time()
 
-batch_size = 32
+batch_size = 64
 max_epochs = 11
 nr_classes = 4
 data_set_size = 256
 model_path = 'checkpoints'
 log_path = 'logs'
-save = False
+save = True
 
 dataLoader = DataLoader("data/SensorCollector_Time_Gravity/", 4, batch_size, [0.8, 0.15])
 
@@ -62,6 +61,12 @@ with tf.Session() as sess:
         print("Successfully loaded:", checkpoint.model_checkpoint_path)
     else:
         print("Could not find old network weights")
+
+    g = sess.graph
+    run_meta = tf.RunMetadata()
+    opts = tf.profiler.ProfileOptionBuilder.float_operation()
+    flops = tf.profiler.profile(g, run_meta=run_meta, cmd='op', options=opts)
+    print("Flops: "+str(flops.total_float_ops))
 
     if save:
         # save graph def
