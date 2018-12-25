@@ -12,12 +12,13 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 start_time = time.time()
 
 batch_size = 64
-max_epochs = 11
+max_epochs = 31
 nr_classes = 4
 data_set_size = 256
 model_path = 'checkpoints'
 log_path = 'logs'
 save = True
+print_float_operations = False
 
 dataLoader = DataLoader("data/SensorCollector_Time_Gravity/", 4, batch_size, [0.8, 0.15])
 
@@ -55,18 +56,23 @@ saver = tf.train.Saver()
 
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
-    checkpoint = tf.train.get_checkpoint_state(model_path)
-    if checkpoint and checkpoint.model_checkpoint_path:
-        saver.restore(sess, checkpoint.model_checkpoint_path)
-        print("Successfully loaded:", checkpoint.model_checkpoint_path)
-    else:
-        print("Could not find old network weights")
 
-    g = sess.graph
-    run_meta = tf.RunMetadata()
-    opts = tf.profiler.ProfileOptionBuilder.float_operation()
-    flops = tf.profiler.profile(g, run_meta=run_meta, cmd='op', options=opts)
-    print("Flops: "+str(flops.total_float_ops))
+    if save:
+        checkpoint = tf.train.get_checkpoint_state(model_path)
+        if checkpoint and checkpoint.model_checkpoint_path:
+            saver.restore(sess, checkpoint.model_checkpoint_path)
+            print("Successfully loaded:", checkpoint.model_checkpoint_path)
+        else:
+            print("Could not find old network weights")
+
+    if print_float_operations:
+        # measure floating point operation for the model
+        g = sess.graph
+        run_meta = tf.RunMetadata()
+        opts = tf.profiler.ProfileOptionBuilder.float_operation()
+        flops = tf.profiler.profile(g, run_meta=run_meta, cmd='op', options=opts)
+        print("Flops: " + str(flops.total_float_ops))
+        # **********************************************
 
     if save:
         # save graph def
