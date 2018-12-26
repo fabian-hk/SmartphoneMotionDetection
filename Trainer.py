@@ -20,7 +20,9 @@ log_path = 'logs'
 save = True
 print_float_operations = False
 
-dataLoader = DataLoader("data/SensorCollector_Time_Gravity/", 4, batch_size, [0.8, 0.15])
+dataset_path = "C:/Users/Fabian/OneDrive - bwedu/Privat/MotionDetection_Dataset/SensorCollector_Time_Gravity/"
+
+dataLoader = DataLoader(dataset_path, 4, batch_size, [0.8, 0.15])
 
 steps_per_epoch = ceil(dataLoader.length(DataLoader.TRAIN) / batch_size)
 val_steps = ceil(dataLoader.length(DataLoader.VAL) / batch_size)
