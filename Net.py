@@ -23,4 +23,4 @@ def create_net(input, keep_prob, nr_classes, name):
         net = slim.dropout(net, keep_prob, scope=name + "/fully/dropout_1")
         net = slim.fully_connected(net, 2048, scope=name + "/fully/fc_2")
         net = slim.dropout(net, keep_prob, scope=name + "/fully/dropout_2")
-        return slim.fully_connected(net, nr_classes, scope=name + "/fully/fc_out")
+        return slim.fully_connected(net, nr_classes, activation_fn=None, scope=name + "/fully/fc_out")
