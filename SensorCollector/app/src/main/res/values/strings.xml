@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">SensorCollector</string>
+    <string name="numberOfDataSets">Number of Data Sets recorded:</string>
+    <string name="classes">Detected classes:</string>
+    <string-array name="classes">
+        <item value="0">Walk</item>
+        <item value="1">Bike</item>
+        <item value="2">Rail travel</item>
+        <item value="3">Car driving</item>
+        <item value="4">Running</item>
+    </string-array>
+</resources>

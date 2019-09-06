@@ -1,10 +1,11 @@
-from DataLoader import DataLoader
-from helper import learning_rate_function
-import Net
 import tensorflow as tf
 from math import ceil
 import time
 import os
+
+from DataLoader import DataLoader
+from helper import learning_rate_function
+import Net
 
 # os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -12,7 +13,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 start_time = time.time()
 
 batch_size = 64
-max_epochs = 31
+max_epochs = 15
 nr_classes = 4
 data_set_size = 256
 model_path = 'checkpoints'
@@ -20,7 +21,7 @@ log_path = 'logs'
 save = True
 print_float_operations = False
 
-dataset_path = "C:/Users/Fabian/OneDrive - bwedu/Privat/MotionDetection_Dataset/SensorCollector_Time_Gravity/"
+dataset_path = "C:/Users/Fabian/CloudStation/DataSets/MotionDetection/SensorCollector_Time_Gravity/"
 
 dataLoader = DataLoader(dataset_path, 4, batch_size, [0.8, 0.15])
 
@@ -91,7 +92,7 @@ with tf.Session() as sess:
             _, train_loss = sess.run([train_step, cross_entropy],
                                      feed_dict={x: batch_x, y_: batch_y, keep_prob: 0.5, learning_rate: lr})
             print("Step " + str(i) + "/" + str(steps_per_epoch) + ": " + str(train_loss), end='\r')
-            if i % 50 == 0:
+            if i % 5 == 0:
                 merged = tf.summary.merge_all()
                 summary = sess.run(merged, feed_dict={x: batch_x, y_: batch_y, keep_prob: 0.5, learning_rate: lr})
                 if save:
