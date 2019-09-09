@@ -1,20 +1,20 @@
 # Description
-In this project i have trained a convolutional neural network
-to classify the state of a smartphone into the states: walk, 
-bike, rail travel, car drive. To create a data set i have
-programed a Android app which records the accelerometer and
-the gyroscope while doing this activities. Later on i also
+In this project I have trained a convolutional neural network
+to classify the state of a smartphone into the following states: walk, 
+bike, rail travel, car drive. To create a data set I have
+programmed an Android app which records the accelerometer and
+the gyroscope while doing this activities. Later on I also
 integrated the trained model into the app to make live predictions 
-on the smartphone. I made this project in spring 2018 in my 
+on the smartphone. I did this project in spring 2018 during my 
 free time besides my computer science studies. 
 Here you can see a screenshot from the app:
 
 ![Android app](doc/SensorCollectorScreenshot.jpg)
 
 # Training
-To train the neural network i collected from every class
-roughly 1000 samples. After 15 epochs i have a accuracy
-of 98.44% on previously unseen data. You can see the
+To train the neural network I collected roughly 1000 samples from 
+each class. After 15 epochs I have an accuracy
+of about 98.44% on previously unseen data. You can see the
 process of training in the following graphs:
 
 ![Training process](doc/TrainingProcess.png)
