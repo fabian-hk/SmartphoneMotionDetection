@@ -21,7 +21,7 @@ log_path = 'logs'
 save = True
 print_float_operations = False
 
-dataset_path = "C:/Users/Fabian/CloudStation/DataSets/MotionDetection/SensorCollector_Time_Gravity/"
+dataset_path = "<path>"
 
 dataLoader = DataLoader(dataset_path, 4, batch_size, [0.8, 0.15])
 
